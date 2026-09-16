@@ -4,7 +4,7 @@
    ===================================================== */
 
 // URL de tu Google Apps Script desplegado (reemplaza con la tuya si cambia)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD8QYw_lP6p9mP_QLG0VTSo3enWv-EzLcSVB9YVu77pSuyDRI0Dildhyt_FhomPeA/exec"; // PEGA AQUÍ LA URL QUE OBTUVISTE EN APPS SCRIPT
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJCxmfzwVg_7OvdnAhuyBVYgwC88W7PiOzNTBKhJdvthbs7d7zam18JlU4OrA_ShCZ/exec"; // PEGA AQUÍ LA URL QUE OBTUVISTE EN APPS SCRIPT
 
 /* ================= DATOS ================= */
 
