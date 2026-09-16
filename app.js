@@ -4,7 +4,7 @@
    ===================================================== */
 
 // URL de tu Google Apps Script desplegado (reemplaza con la tuya si cambia)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJCxmfzwVg_7OvdnAhuyBVYgwC88W7PiOzNTBKhJdvthbs7d7zam18JlU4OrA_ShCZ/exec"; // PEGA AQUÍ LA URL QUE OBTUVISTE EN APPS SCRIPT
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJCxmfzwVg_7OvdnAhuyBVYgwC88W7PiOzNTBKhJdvthbs7d7zam18JlU4OrA_ShCZ/exec; // PEGA AQUÍ LA URL QUE OBTUVISTE EN APPS SCRIPT
 
 /* ================= DATOS ================= */
 
@@ -618,12 +618,6 @@ function actualizarFecha() {
 
 setInterval(actualizarFecha, 1000);
 actualizarFecha();
-
-/* ================= INICIAR ================= */
-
-actualizarTodo();
-
-
 
 /* ================= INICIAR ================= */
 
