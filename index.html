@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Mi Tienda | Inventario</title>
-
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
     <!-- BARRA LATERAL -->
     <aside class="sidebar">
-
         <div class="logo">
             <div class="logo-icon">🛒</div>
-
             <div>
                 <h2>Mi Tienda</h2>
                 <span>Inventario & Ventas</span>
@@ -24,120 +19,72 @@
         </div>
 
         <nav>
-
-            <button class="menu active" onclick="mostrarSeccion('inicio', this)">
-                🏠 Inicio
-            </button>
-
-            <button class="menu" onclick="mostrarSeccion('inventario', this)">
-                📦 Inventario
-            </button>
-
-            <button class="menu" onclick="mostrarSeccion('ventas', this)">
-                🛒 Ventas
-            </button>
-
-            <button class="menu" onclick="mostrarSeccion('reportes', this)">
-                📊 Reportes
-            </button>
-
-            <button class="menu" onclick="mostrarSeccion('configuracion', this)">
-                ⚙️ Configuración
-            </button>
-
+            <button class="menu active" onclick="mostrarSeccion('inicio', this)">🏠 Inicio</button>
+            <button class="menu" onclick="mostrarSeccion('inventario', this)">📦 Inventario</button>
+            <button class="menu" onclick="mostrarSeccion('ventas', this)">🛒 Ventas</button>
+            <button class="menu" onclick="mostrarSeccion('reportes', this)">📊 Reportes</button>
+            <button class="menu" onclick="mostrarSeccion('configuracion', this)">⚙️ Configuración</button>
         </nav>
 
         <div class="conexion">
             <span class="punto"></span>
-            Sistema funcionando
-
-            <small>Google Sheets se conectará después</small>
+            Sistema Conectado
+            <small>Sincronización activa con Google Sheets</small>
         </div>
-
     </aside>
-
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main">
-
         <header class="header">
-
             <div>
                 <h1 id="tituloPagina">Mi Tienda</h1>
                 <p id="subtituloPagina">Panel principal</p>
             </div>
-
             <div id="fechaActual"></div>
-
         </header>
 
-
-        <!-- ================= INICIO ================= -->
-
+        <!-- INICIO -->
         <section id="inicio" class="seccion activa">
-
             <div class="tarjetas">
-
                 <div class="tarjeta">
                     <div class="icono azul">📦</div>
-
                     <div>
                         <span>Productos registrados</span>
                         <strong id="totalProductos">0</strong>
                     </div>
                 </div>
-
-
                 <div class="tarjeta">
                     <div class="icono verde">💰</div>
-
                     <div>
                         <span>Ventas de hoy</span>
                         <strong id="ventasHoy">L. 0.00</strong>
                     </div>
                 </div>
-
-
                 <div class="tarjeta">
                     <div class="icono naranja">⚠️</div>
-
                     <div>
                         <span>Bajo stock</span>
                         <strong id="bajoStock">0</strong>
                     </div>
                 </div>
-
-
                 <div class="tarjeta">
                     <div class="icono morado">⏳</div>
-
                     <div>
                         <span>Pagos pendientes</span>
                         <strong id="pendientes">L. 0.00</strong>
                     </div>
                 </div>
-
             </div>
 
-
             <div class="dos-columnas">
-
                 <div class="panel">
-
                     <div class="panel-header">
                         <h2>Productos</h2>
-
-                        <button class="boton" onclick="mostrarSeccion('inventario')">
-                            + Registrar producto
-                        </button>
+                        <button class="boton" onclick="mostrarSeccion('inventario')">+ Registrar producto</button>
                     </div>
-
                     <div class="tabla-contenedor">
-
                         <table>
-
                             <thead>
-
                                 <tr>
                                     <th>ID</th>
                                     <th>Producto</th>
@@ -145,198 +92,81 @@
                                     <th>Precio</th>
                                     <th>Stock</th>
                                 </tr>
-
                             </thead>
-
                             <tbody id="tablaInicioProductos"></tbody>
-
                         </table>
-
                     </div>
-
                 </div>
 
-
                 <div class="panel">
-
                     <div class="panel-header">
-
                         <h2>Últimas ventas</h2>
-
-                        <button class="link" onclick="mostrarSeccion('ventas')">
-                            Ver ventas →
-                        </button>
-
+                        <button class="link" onclick="mostrarSeccion('ventas')">Ver ventas →</button>
                     </div>
-
                     <div class="tabla-contenedor">
-
                         <table>
-
                             <thead>
-
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Producto</th>
                                     <th>Cliente</th>
                                     <th>Total</th>
                                 </tr>
-
                             </thead>
-
                             <tbody id="tablaInicioVentas"></tbody>
-
                         </table>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- ================= INVENTARIO ================= -->
-
+        <!-- INVENTARIO -->
         <section id="inventario" class="seccion">
-
             <div class="titulo-seccion">
-
                 <h2>Inventario</h2>
                 <p>Registra y administra los productos de tu tienda.</p>
-
             </div>
 
-
             <div class="dos-columnas">
-
-                <!-- FORMULARIO -->
-
                 <div class="panel">
-
                     <h2>Registrar producto</h2>
-
                     <form id="formProducto">
-
                         <input type="hidden" id="productoID">
-
                         <label>
                             Nombre del producto
-
-                            <input
-                                type="text"
-                                id="nombreProducto"
-                                placeholder="Ej. Audífonos Bluetooth"
-                                required
-                            >
-
+                            <input type="text" id="nombreProducto" placeholder="Ej. Audífonos Bluetooth" required>
                         </label>
-
-
                         <label>
                             Marca
-
-                            <input
-                                type="text"
-                                id="marcaProducto"
-                                placeholder="Ej. JBL"
-                                required
-                            >
-
+                            <input type="text" id="marcaProducto" placeholder="Ej. JBL" required>
                         </label>
-
-
                         <label>
                             Detalle
-
-                            <textarea
-                                id="detalleProducto"
-                                placeholder="Descripción del producto"
-                                required
-                            ></textarea>
-
+                            <textarea id="detalleProducto" placeholder="Descripción del producto" required></textarea>
                         </label>
-
-
                         <div class="fila">
-
                             <label>
                                 Precio
-
-                                <input
-                                    type="number"
-                                    id="precioProducto"
-                                    min="0"
-                                    step="0.01"
-                                    placeholder="0.00"
-                                    required
-                                >
-
+                                <input type="number" id="precioProducto" min="0" step="0.01" placeholder="0.00" required>
                             </label>
-
-
                             <label>
                                 Cantidad
-
-                                <input
-                                    type="number"
-                                    id="cantidadProducto"
-                                    min="0"
-                                    step="1"
-                                    placeholder="0"
-                                    required
-                                >
-
+                                <input type="number" id="cantidadProducto" min="0" step="1" placeholder="0" required>
                             </label>
-
                         </div>
-
-
-                        <button class="boton grande" type="submit">
-                            💾 Guardar producto
-                        </button>
-
-
-                        <button
-                            class="boton gris grande oculto"
-                            type="button"
-                            id="cancelarEdicion"
-                        >
-                            Cancelar edición
-                        </button>
-
+                        <button class="boton grande" type="submit">💾 Guardar producto</button>
+                        <button class="boton gris grande oculto" type="button" id="cancelarEdicion">Cancelar edición</button>
                     </form>
-
                 </div>
 
-
-                <!-- TABLA -->
-
                 <div class="panel">
-
                     <div class="panel-header">
-
                         <h2>Productos registrados</h2>
-
                     </div>
-
-
-                    <input
-                        type="text"
-                        id="buscarProducto"
-                        class="buscador"
-                        placeholder="🔎 Buscar producto, marca o ID..."
-                    >
-
-
+                    <input type="text" id="buscarProducto" class="buscador" placeholder="🔎 Buscar producto, marca o ID...">
                     <div class="tabla-contenedor">
-
                         <table>
-
                             <thead>
-
                                 <tr>
                                     <th>ID</th>
                                     <th>Producto</th>
@@ -346,191 +176,78 @@
                                     <th>Stock</th>
                                     <th>Acciones</th>
                                 </tr>
-
                             </thead>
-
                             <tbody id="tablaProductos"></tbody>
-
                         </table>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- ================= VENTAS ================= -->
-
+        <!-- VENTAS -->
         <section id="ventas" class="seccion">
-
             <div class="titulo-seccion">
-
                 <h2>Ventas</h2>
-
-                <p>
-                    Registra una venta y el inventario se actualizará automáticamente.
-                </p>
-
+                <p>Registra una venta y el inventario se actualizará automáticamente.</p>
             </div>
 
-
             <div class="dos-columnas">
-
-
-                <!-- FORMULARIO VENTA -->
-
                 <div class="panel">
-
                     <h2>Registrar venta</h2>
-
                     <form id="formVenta">
-
                         <label>
                             Producto
-
                             <select id="productoVenta" required>
-
-                                <option value="">
-                                    Selecciona un producto
-                                </option>
-
+                                <option value="">Selecciona un producto</option>
                             </select>
-
                         </label>
-
-
                         <div class="fila">
-
                             <label>
                                 Cantidad
-
-                                <input
-                                    type="number"
-                                    id="cantidadVenta"
-                                    min="1"
-                                    value="1"
-                                    required
-                                >
-
+                                <input type="number" id="cantidadVenta" min="1" value="1" required>
                             </label>
-
-
                             <label>
                                 Precio unitario
-
-                                <input
-                                    type="text"
-                                    id="precioVenta"
-                                    readonly
-                                >
-
+                                <input type="text" id="precioVenta" readonly>
                             </label>
-
                         </div>
-
-
                         <label>
                             ¿A quién se le vendió?
-
-                            <input
-                                type="text"
-                                id="clienteVenta"
-                                placeholder="Nombre del cliente"
-                                required
-                            >
-
+                            <input type="text" id="clienteVenta" placeholder="Nombre del cliente" required>
                         </label>
-
-
                         <div class="fila">
-
                             <label>
                                 Método de pago
-
                                 <select id="metodoPago">
-
-                                    <option value="Efectivo">
-                                        Efectivo
-                                    </option>
-
-                                    <option value="Transferencia">
-                                        Transferencia
-                                    </option>
-
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Transferencia">Transferencia</option>
                                 </select>
-
                             </label>
-
-
                             <label>
                                 Estado
-
                                 <select id="estadoPago">
-
-                                    <option value="Pagado">
-                                        Pagado
-                                    </option>
-
-                                    <option value="Pendiente">
-                                        Pendiente
-                                    </option>
-
+                                    <option value="Pagado">Pagado</option>
+                                    <option value="Pendiente">Pendiente</option>
                                 </select>
-
                             </label>
-
                         </div>
-
-
                         <label>
                             Fecha
-
-                            <input
-                                type="date"
-                                id="fechaVenta"
-                                required
-                            >
-
+                            <input type="date" id="fechaVenta" required>
                         </label>
-
-
                         <div class="total">
-
                             <span>Total</span>
-
-                            <strong id="totalVenta">
-                                L. 0.00
-                            </strong>
-
+                            <strong id="totalVenta">L. 0.00</strong>
                         </div>
-
-
-                        <button class="boton grande" type="submit">
-                            🛒 Registrar venta
-                        </button>
-
+                        <button class="boton grande" type="submit">🛒 Registrar venta</button>
                     </form>
-
                 </div>
 
-
-
-                <!-- HISTORIAL -->
-
                 <div class="panel">
-
                     <h2>Historial de ventas</h2>
-
                     <div class="tabla-contenedor">
-
                         <table>
-
                             <thead>
-
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Producto</th>
@@ -539,168 +256,87 @@
                                     <th>Pago</th>
                                     <th>Estado</th>
                                 </tr>
-
                             </thead>
-
                             <tbody id="tablaVentas"></tbody>
-
                         </table>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- ================= REPORTES ================= -->
-
+        <!-- REPORTES -->
         <section id="reportes" class="seccion">
-
             <div class="titulo-seccion">
-
                 <h2>Reportes</h2>
-
                 <p>Resumen de las operaciones de la tienda.</p>
-
             </div>
-
-
             <div class="tarjetas">
-
                 <div class="tarjeta">
-
                     <div class="icono verde">💵</div>
-
                     <div>
                         <span>Total vendido</span>
                         <strong id="reporteTotal">L. 0.00</strong>
                     </div>
-
                 </div>
-
-
                 <div class="tarjeta">
-
                     <div class="icono morado">⏳</div>
-
                     <div>
                         <span>Por cobrar</span>
                         <strong id="reportePendiente">L. 0.00</strong>
                     </div>
-
                 </div>
-
-
                 <div class="tarjeta">
-
                     <div class="icono azul">📦</div>
-
                     <div>
                         <span>Unidades en stock</span>
                         <strong id="reporteUnidades">0</strong>
                     </div>
-
                 </div>
-
             </div>
 
-
             <div class="panel">
-
                 <h2>Productos con poco stock</h2>
-
                 <div class="tabla-contenedor">
-
                     <table>
-
                         <thead>
-
                             <tr>
                                 <th>Producto</th>
                                 <th>Marca</th>
                                 <th>Stock</th>
                             </tr>
-
                         </thead>
-
                         <tbody id="tablaBajoStock"></tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- ================= CONFIGURACIÓN ================= -->
-
+        <!-- CONFIGURACIÓN -->
         <section id="configuracion" class="seccion">
-
             <div class="titulo-seccion">
-
                 <h2>Configuración</h2>
-
-                <p>
-                    Configuración del sistema y conexión con Google Sheets.
-                </p>
-
+                <p>Configuración del sistema y conexión con Google Sheets.</p>
             </div>
 
-
             <div class="panel configuracion">
-
                 <h2>Google Sheets</h2>
-
-                <p>
-                    En la siguiente etapa conectaremos esta página con
-                    Google Sheets para guardar los productos y ventas.
-                </p>
-
+                <p>Pega aquí la URL Web App obtenida de Google Apps Script (debe terminar en <code>/exec</code>) para activar la sincronización automática.</p>
 
                 <label>
                     URL de Google Apps Script
-
-                    <input
-                        type="text"
-                        id="urlGoogleSheets"
-                        placeholder="Aquí colocaremos la URL"
-                    >
-
+                    <input type="text" id="urlGoogleSheets" placeholder="https://script.google.com/macros/s/.../exec">
                 </label>
 
-
-                <button
-                    class="boton"
-                    onclick="guardarConfiguracion()"
-                >
-                    Guardar configuración
-                </button>
-
+                <button class="boton" onclick="guardarConfiguracion()">Guardar configuración</button>
 
                 <div class="aviso">
-
-                    ℹ️ Actualmente los datos se almacenan únicamente
-                    en este navegador.
-
+                    ✅ La URL se almacena de forma segura para sincronizar los registros.
                 </div>
-
             </div>
-
         </section>
-
     </main>
 
-
     <div id="mensaje"></div>
-
     <script src="app.js"></script>
-
 </body>
 </html>
