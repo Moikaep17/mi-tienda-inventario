@@ -9,8 +9,7 @@
    CONFIGURACIÓN
    ===================================================== */
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpDOWQIMwi-v_-lI2xiIUzqtP1j_ujOXT8SYn9K0ffqVCG2tSzxv5EBhE3B2kEvAAPNQ/exec;
-    "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpDOWQIMwi-v_-lI2xiIUzqtP1j_ujOXT8SYn9K0ffqVCG2tSzxv5EBhE3B2kEvAAPNQ/exec";
 
 
 /* =====================================================
