@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Pro - Mi Tienda</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- OVERLAY PARA MÓVIL -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- BARRA LATERAL DE NAVEGACIÓN -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2>⚡ Mi Tienda Pro</h2>
+            </div>
+            <nav>
+                <button class="menu active" onclick="mostrarSeccion('inicio', this); toggleSidebarMobile();">🏠 Inicio</button>
+                <button class="menu" onclick="mostrarSeccion('inventario', this); toggleSidebarMobile();">📦 Inventario</button>
+                <button class="menu" onclick="mostrarSeccion('ventas', this); toggleSidebarMobile();">💰 Ventas</button>
+                <button class="menu" onclick="mostrarSeccion('reportes', this); toggleSidebarMobile();">📊 Reportes</button>
+                <button class="menu" onclick="mostrarSeccion('configuracion', this); toggleSidebarMobile();">⚙️ Configuración</button>
+            </nav>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <!-- CABECERA -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <div>
+                        <h1 id="tituloPagina">Mi Tienda</h1>
+                        <p id="subtituloPagina">Panel principal</p>
+                    </div>
+                </div>
+                <div id="fechaActual" class="fecha"></div>
+            </header>
+
+            <!-- MENSAJE DE NOTIFICACIÓN -->
+            <div id="mensaje" class="notificacion"></div>
+
+            <!-- SECCIÓN: INICIO -->
+            <section id="inicio" class="seccion activa">
+                <div class="tarjetas-grid">
+                    <div class="tarjeta">
+                        <h3>Total Productos</h3>
+                        <p id="totalProductos">0</p>
+                    </div>
+                    <div class="tarjeta success">
+                        <h3>Ventas de Hoy</h3>
+                        <p id="ventasHoy">L. 0.00</p>
+                    </div>
+                    <div class="tarjeta warning">
+                        <h3>Bajo Stock</h3>
+                        <p id="bajoStock">0</p>
+                    </div>
+                    <div class="tarjeta danger">
+                        <h3>Saldos Pendientes</h3>
+                        <p id="pendientes">L. 0.00</p>
+                    </div>
+                </div>
+
+                <div class="tablas-resumen">
+                    <div class="card-tabla">
+                        <h3>📦 Últimos Productos Registrados</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaInicioProductos"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-tabla">
+                        <h3>💰 Últimas Ventas</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Producto</th>
+                                        <th>Cliente</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaInicioVentas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: INVENTARIO -->
+            <section id="inventario" class="seccion">
+                <div class="grid-form-tabla">
+                    <div class="card-form">
+                        <h3>✨ Registrar / Editar Producto</h3>
+                        <form id="formProducto">
+                            <input type="hidden" id="productoID">
+                            
+                            <div class="form-group">
+                                <label>Nombre del Producto:</label>
+                                <input type="text" id="nombreProducto" placeholder="Ej. Camisa Polo" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Marca:</label>
+                                <input type="text" id="marcaProducto" placeholder="Ej. Nike" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Detalle / Descripción:</label>
+                                <input type="text" id="detalleProducto" placeholder="Talla, color, etc.">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Valor Producto (L.):</label>
+                                    <input type="number" id="valorProducto" step="0.01" min="0" value="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Impuestos (L.):</label>
+                                    <input type="number" id="impuestosProducto" step="0.01" min="0" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Costos Varios (L.):</label>
+                                    <input type="number" id="costosVarios" step="0.01" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Costos Intro. (L.):</label>
+                                    <input type="number" id="costosIntroduccion" step="0.01" min="0" value="0">
+                                </div>
+                            </div>
+
+                            <div class="form-row highlight-box">
+                                <div class="form-group">
+                                    <label><strong>Subtotal Costos:</strong></label>
+                                    <div id="subtotalProducto" class="monto-destacado">L. 0.00</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ganancia (L.):</label>
+                                    <input type="number" id="gananciaProducto" step="0.01" min="0" value="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row highlight-box-total">
+                                <div class="form-group">
+                                    <label><strong>Precio Venta Final:</strong></label>
+                                    <div id="totalProducto" class="monto-destacado-total">L. 0.00</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stock Inicial:</label>
+                                    <input type="number" id="cantidadProducto" min="0" value="1" required>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="boton primario">Guardar Producto</button>
+                                <button type="button" id="cancelarEdicion" class="boton secundario oculto">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-tabla">
+                        <div class="tabla-header">
+                            <h3>📋 Listado de Inventario</h3>
+                            <input type="text" id="buscarProducto" placeholder="🔍 Buscar producto...">
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Marca</th>
+                                        <th>Subtotal</th>
+                                        <th>Ganancia</th>
+                                        <th>P. Venta</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProductos"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: VENTAS -->
+            <section id="ventas" class="seccion">
+                <div class="grid-form-tabla">
+                    <div class="card-form">
+                        <h3>💳 Registrar Nueva Venta</h3>
+                        <form id="formVenta">
+                            <div class="form-group">
+                                <label>Producto:</label>
+                                <select id="productoVenta" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad:</label>
+                                <input type="number" id="cantidadVenta" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre del Cliente:</label>
+                                <input type="text" id="clienteVenta" placeholder="Nombre completo" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha de Venta:</label>
+                                <input type="date" id="fechaVenta" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Método de Pago:</label>
+                                <select id="metodoPago">
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="Tarjeta">Tarjeta</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Estado del Pago:</label>
+                                <select id="estadoPago" onchange="toggleSeccionAbono()">
+                                    <option value="Pagado">Pagado Completo</option>
+                                    <option value="Pendiente">Pendiente (Crédito)</option>
+                                    <option value="Abono">Abonado / Parcial</option>
+                                </select>
+                            </div>
+
+                            <div id="seccionAbono" class="oculto box-abono">
+                                <h4>Registrar Abono Inicial</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Monto Abono (L.):</label>
+                                        <input type="number" id="montoAbono" step="0.01" min="0" value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Fecha Abono:</label>
+                                        <input type="date" id="fechaAbono">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="total-box">
+                                <span>Total a Pagar: </span>
+                                <strong id="totalVenta">L. 0.00</strong>
+                            </div>
+
+                            <button type="submit" class="boton primario">Procesar Venta</button>
+                        </form>
+                    </div>
+
+                    <div class="card-tabla">
+                        <h3>📈 Historial General de Ventas</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Producto (Cant)</th>
+                                        <th>Cliente</th>
+                                        <th>Montos</th>
+                                        <th>Estado / Pend.</th>
+                                        <th>Historial Abonos</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaVentas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: REPORTES -->
+            <section id="reportes" class="seccion">
+                <div class="tarjetas-grid">
+                    <div class="tarjeta success">
+                        <h3>Total Cobrado Histórico</h3>
+                        <p id="reporteTotal">L. 0.00</p>
+                    </div>
+                    <div class="tarjeta danger">
+                        <h3>Total Pendiente por Cobrar</h3>
+                        <p id="reportePendiente">L. 0.00</p>
+                    </div>
+                </div>
+                <div class="card-tabla" style="margin-top: 25px;">
+                    <h3>⚠️️ Productos con Bajo Stock (≤ 3 unidades)</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Stock Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBajoStock"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: CONFIGURACIÓN -->
+            <section id="configuracion" class="seccion">
+                <div class="card-form" style="max-width: 600px;">
+                    <h3>🔗 Conexión con Google Sheets</h3>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Pega tu URL de Google Apps Script para sincronizar automáticamente tus registros en la nube.</p>
+                    <div class="form-group">
+                        <label>URL Web App:</label>
+                        <input type="text" id="urlGoogleSheets" placeholder="https://script.google.com/macros/s/.../exec">
+                    </div>
+                    <button class="boton primario" onclick="guardarConfiguracion()">Guardar Configuración</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
