@@ -3,7 +3,7 @@
 // ==========================================
 let productos = JSON.parse(localStorage.getItem('productos')) || [];
 let ventas = JSON.parse(localStorage.getItem('ventas')) || [];
-let urlGoogleSheets = localStorage.getItem('urlGoogleSheets') || 'https://script.google.com/macros/s/AKfycbx_N1FwOdhfN1WKl_JgC17MN2_R61a2ejtqhfEYMuLtIQHLQqL1tPpw82zruQJPvfKPag/exec';
+let urlGoogleSheets = 'https://script.google.com/macros/s/AKfycbx_N1FwOdhfN1WKl_JgC17MN2_R61a2ejtqhfEYMuLtIQHLQqL1tPpw82zruQJPvfKPag/exec';
 
 // ==========================================
 // INICIALIZACIÓN
