@@ -3,7 +3,7 @@
 // ==========================================
 let productos = JSON.parse(localStorage.getItem('productos')) || [];
 let ventas = JSON.parse(localStorage.getItem('ventas')) || [];
-let urlGoogleSheets = 'https://script.google.com/macros/s/AKfycbx_N1FwOdhfN1WKl_JgC17MN2_R61a2ejtqhfEYMuLtIQHLQqL1tPpw82zruQJPvfKPag/exec';
+let urlGoogleSheets = localStorage.getItem('urlGoogleSheets') || 'https://script.google.com/macros/s/AKfycbx_N1FwOdhfN1WKl_JgC17MN2_R61a2ejtqhfEYMuLtIQHLQqL1tPpw82zruQJPvfKPag/exec';
 
 // ==========================================
 // INICIALIZACIÓN
@@ -26,14 +26,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (elem) elem.addEventListener('input', calcularTotalesProducto);
     });
 
-    document.getElementById('formProducto').addEventListener('submit', guardarProducto);
-    document.getElementById('cancelarEdicion').addEventListener('click', limpiarFormularioProducto);
-    document.getElementById('buscarProducto').addEventListener('input', filtrarProductos);
+    const formProducto = document.getElementById('formProducto');
+    if (formProducto) formProducto.addEventListener('submit', guardarProducto);
+
+    const cancelarEdicion = document.getElementById('cancelarEdicion');
+    if (cancelarEdicion) cancelarEdicion.addEventListener('click', limpiarFormularioProducto);
+
+    const buscarProducto = document.getElementById('buscarProducto');
+    if (buscarProducto) buscarProducto.addEventListener('input', filtrarProductos);
     
     // Escuchadores de Ventas
-    document.getElementById('productoVenta').addEventListener('change', actualizarPrecioVenta);
-    document.getElementById('cantidadVenta').addEventListener('input', calcularTotalVenta);
-    document.getElementById('formVenta').addEventListener('submit', registrarVenta);
+    const productoVenta = document.getElementById('productoVenta');
+    if (productoVenta) productoVenta.addEventListener('change', actualizarPrecioVenta);
+
+    const cantidadVenta = document.getElementById('cantidadVenta');
+    if (cantidadVenta) cantidadVenta.addEventListener('input', calcularTotalVenta);
+
+    const formVenta = document.getElementById('formVenta');
+    if (formVenta) formVenta.addEventListener('submit', registrarVenta);
 
     // Cargar URL guardada
     const inputUrl = document.getElementById('urlGoogleSheets');
@@ -73,7 +83,7 @@ function mostrarSeccion(idSeccion, botonClick) {
         'configuracion': { t: 'Configuración', s: 'Ajustes y sincronización' }
     };
 
-    if (titulos[idSeccion]) {
+    if (titulos[idSeccion] && titulo && subtitulo) {
         titulo.innerText = titulos[idSeccion].t;
         subtitulo.innerText = titulos[idSeccion].s;
     }
@@ -82,8 +92,8 @@ function mostrarSeccion(idSeccion, botonClick) {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('open');
+    if (sidebar) sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('open');
 }
 
 function toggleSidebarMobile() {
@@ -96,17 +106,20 @@ function toggleSidebarMobile() {
 // CÁLCULO EN TIEMPO REAL - INVENTARIO
 // ==========================================
 function calcularTotalesProducto() {
-    const valor = parseFloat(document.getElementById('valorProducto').value) || 0;
-    const impuestos = parseFloat(document.getElementById('impuestosProducto').value) || 0;
-    const varios = parseFloat(document.getElementById('costosVarios').value) || 0;
-    const introduccion = parseFloat(document.getElementById('costosIntroduccion').value) || 0;
-    const ganancia = parseFloat(document.getElementById('gananciaProducto').value) || 0;
+    const valor = parseFloat(document.getElementById('valorProducto')?.value) || 0;
+    const impuestos = parseFloat(document.getElementById('impuestosProducto')?.value) || 0;
+    const varios = parseFloat(document.getElementById('costosVarios')?.value) || 0;
+    const introduccion = parseFloat(document.getElementById('costosIntroduccion')?.value) || 0;
+    const ganancia = parseFloat(document.getElementById('gananciaProducto')?.value) || 0;
 
     const subtotal = valor + impuestos + varios + introduccion;
     const total = subtotal + ganancia;
 
-    document.getElementById('subtotalProducto').innerText = `L. ${subtotal.toFixed(2)}`;
-    document.getElementById('totalProducto').innerText = `L. ${total.toFixed(2)}`;
+    const subtotalElem = document.getElementById('subtotalProducto');
+    const totalElem = document.getElementById('totalProducto');
+
+    if (subtotalElem) subtotalElem.innerText = `L. ${subtotal.toFixed(2)}`;
+    if (totalElem) totalElem.innerText = `L. ${total.toFixed(2)}`;
 
     return { subtotal, total };
 }
@@ -130,6 +143,7 @@ async function guardarProducto(e) {
     
     const { subtotal, total } = calcularTotalesProducto();
     const cantidad = parseInt(document.getElementById('cantidadProducto').value, 10) || 0;
+    const totalStock = total * cantidad; // Cálculo del valor del lote
 
     const productoData = {
         id: idInput || '',
@@ -143,7 +157,8 @@ async function guardarProducto(e) {
         subtotal,
         ganancia,
         precio: total,
-        cantidad
+        cantidad,
+        totalStock
     };
 
     const accion = idInput ? 'editarProducto' : 'guardarProducto';
@@ -161,24 +176,6 @@ async function guardarProducto(e) {
     guardarEnLocalStorage();
     limpiarFormularioProducto();
     actualizarTodo();
-    // Dentro de la función guardarProducto en app.js:
-const totalStock = total * cantidad; // Calculamos el valor total en dinero del lote
-
-const productoData = {
-    id: idInput || '',
-    nombre,
-    marca,
-    detalle,
-    valor,
-    impuestos,
-    varios,
-    introduccion,
-    subtotal,
-    ganancia,
-    precio: total,
-    cantidad,
-    totalStock // <-- Agregamos este campo para enviarlo a Google Sheets
-};
 
     await enviarAGoogleSheets({ action: accion, producto: productoData });
 }
@@ -196,10 +193,11 @@ function editarProducto(id) {
     document.getElementById('costosVarios').value = prod.varios || 0;
     document.getElementById('costosIntroduccion').value = prod.introduccion || 0;
     document.getElementById('gananciaProducto').value = prod.ganancia || 0;
-    document.getElementById('cantidadProducto').value = prod.cantidad || prod.stock || 0;
+    document.getElementById('cantidadProducto').value = prod.cantidad !== undefined ? prod.cantidad : (prod.stock || 0);
 
     calcularTotalesProducto();
-    document.getElementById('cancelarEdicion').classList.remove('oculto');
+    const cancelarBtn = document.getElementById('cancelarEdicion');
+    if (cancelarBtn) cancelarBtn.classList.remove('oculto');
     mostrarSeccion('inventario');
 }
 
@@ -215,11 +213,17 @@ async function eliminarProducto(id) {
 }
 
 function limpiarFormularioProducto() {
-    document.getElementById('formProducto').reset();
+    const form = document.getElementById('formProducto');
+    if (form) form.reset();
     document.getElementById('productoID').value = '';
-    document.getElementById('subtotalProducto').innerText = 'L. 0.00';
-    document.getElementById('totalProducto').innerText = 'L. 0.00';
-    document.getElementById('cancelarEdicion').classList.add('oculto');
+    
+    const subtotalElem = document.getElementById('subtotalProducto');
+    const totalElem = document.getElementById('totalProducto');
+    if (subtotalElem) subtotalElem.innerText = 'L. 0.00';
+    if (totalElem) totalElem.innerText = 'L. 0.00';
+
+    const cancelarBtn = document.getElementById('cancelarEdicion');
+    if (cancelarBtn) cancelarBtn.classList.add('oculto');
 }
 
 function filtrarProductos() {
@@ -238,10 +242,12 @@ function filtrarProductos() {
 function toggleSeccionAbono() {
     const estado = document.getElementById('estadoPago').value;
     const seccion = document.getElementById('seccionAbono');
-    if (estado === 'Abono') {
-        seccion.classList.remove('oculto');
-    } else {
-        seccion.classList.add('oculto');
+    if (seccion) {
+        if (estado === 'Abono') {
+            seccion.classList.remove('oculto');
+        } else {
+            seccion.classList.add('oculto');
+        }
     }
 }
 
@@ -254,11 +260,12 @@ function calcularTotalVenta() {
     const cantidad = parseInt(document.getElementById('cantidadVenta').value, 10) || 0;
     const prod = productos.find(p => p.id === idProd);
 
+    const totalElem = document.getElementById('totalVenta');
     if (prod && cantidad > 0) {
         const total = prod.precio * cantidad;
-        document.getElementById('totalVenta').innerText = `L. ${total.toFixed(2)}`;
+        if (totalElem) totalElem.innerText = `L. ${total.toFixed(2)}`;
     } else {
-        document.getElementById('totalVenta').innerText = 'L. 0.00';
+        if (totalElem) totalElem.innerText = 'L. 0.00';
     }
 }
 
@@ -322,8 +329,10 @@ async function registrarVenta(e) {
 
     guardarEnLocalStorage();
     actualizarTodo();
+
     document.getElementById('formVenta').reset();
-    document.getElementById('seccionAbono').classList.add('oculto');
+    const seccionAbono = document.getElementById('seccionAbono');
+    if (seccionAbono) seccionAbono.classList.add('oculto');
     document.getElementById('fechaVenta').value = new Date().toISOString().split('T')[0];
     mostrarNotificacion('¡Venta registrada con éxito!');
 
@@ -397,7 +406,7 @@ function renderTablaInventario(lista) {
     lista.forEach(p => {
         const stockActual = p.cantidad !== undefined ? p.cantidad : (p.stock || 0);
         const precioUnitario = p.precio || 0;
-        const totalStock = precioUnitario * stockActual; // Multiplicación (Precio x Stock)
+        const totalStock = p.totalStock !== undefined ? p.totalStock : (precioUnitario * stockActual);
 
         tbody.innerHTML += `
             <tr>
@@ -409,25 +418,6 @@ function renderTablaInventario(lista) {
                 <td><strong>L. ${precioUnitario.toFixed(2)}</strong></td>
                 <td>${stockActual}</td>
                 <td><strong style="color:var(--success);">L. ${totalStock.toFixed(2)}</strong></td>
-                <td>
-                    <button class="boton-sm primario" onclick="editarProducto('${p.id}')">✏️</button>
-                    <button class="boton-sm peligro" onclick="eliminarProducto('${p.id}')">🗑️</button>
-                </td>
-            </tr>
-        `;
-    });
-}
-
-    lista.forEach(p => {
-        tbody.innerHTML += `
-            <tr>
-                <td><small style="color:var(--text-muted);">${p.id}</small></td>
-                <td><strong>${p.nombre}</strong></td>
-                <td>${p.marca}</td>
-                <td>L. ${(p.subtotal || 0).toFixed(2)}</td>
-                <td>L. ${(p.ganancia || 0).toFixed(2)}</td>
-                <td><strong>L. ${(p.precio || 0).toFixed(2)}</strong></td>
-                <td>${p.cantidad !== undefined ? p.cantidad : p.stock || 0}</td>
                 <td>
                     <button class="boton-sm primario" onclick="editarProducto('${p.id}')">✏️</button>
                     <button class="boton-sm peligro" onclick="eliminarProducto('${p.id}')">🗑️</button>
@@ -493,12 +483,13 @@ function renderTablaInicioProductos() {
     if (!tbody) return;
     tbody.innerHTML = '';
     productos.slice(-5).reverse().forEach(p => {
+        const stock = p.cantidad !== undefined ? p.cantidad : p.stock;
         tbody.innerHTML += `
             <tr>
                 <td><small>${p.id}</small></td>
                 <td><strong>${p.nombre}</strong></td>
                 <td>L. ${(p.precio || 0).toFixed(2)}</td>
-                <td>${p.cantidad !== undefined ? p.cantidad : p.stock}</td>
+                <td>${stock}</td>
             </tr>
         `;
     });
@@ -532,10 +523,11 @@ function renderTablaBajoStock() {
     }
 
     pocoStock.forEach(p => {
+        const stock = p.cantidad !== undefined ? p.cantidad : p.stock;
         tbody.innerHTML += `
             <tr>
                 <td><strong>${p.nombre}</strong> (${p.marca})</td>
-                <td><span class="badge warning">${p.cantidad !== undefined ? p.cantidad : p.stock} unidades</span></td>
+                <td><span class="badge warning">${stock} unidades</span></td>
             </tr>
         `;
     });
