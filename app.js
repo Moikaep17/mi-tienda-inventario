@@ -372,9 +372,33 @@ function renderTablaInventario(lista) {
     tbody.innerHTML = '';
 
     if (lista.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--text-muted);">No se encontraron productos.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 20px; color: var(--text-muted);">No se encontraron productos.</td></tr>`;
         return;
     }
+
+    lista.forEach(p => {
+        const stockActual = p.cantidad !== undefined ? p.cantidad : (p.stock || 0);
+        const precioUnitario = p.precio || 0;
+        const totalStock = precioUnitario * stockActual; // Multiplicación (Precio x Stock)
+
+        tbody.innerHTML += `
+            <tr>
+                <td><small style="color:var(--text-muted);">${p.id}</small></td>
+                <td><strong>${p.nombre}</strong></td>
+                <td>${p.marca}</td>
+                <td>L. ${(p.subtotal || 0).toFixed(2)}</td>
+                <td>L. ${(p.ganancia || 0).toFixed(2)}</td>
+                <td><strong>L. ${precioUnitario.toFixed(2)}</strong></td>
+                <td>${stockActual}</td>
+                <td><strong style="color:var(--success);">L. ${totalStock.toFixed(2)}</strong></td>
+                <td>
+                    <button class="boton-sm primario" onclick="editarProducto('${p.id}')">✏️</button>
+                    <button class="boton-sm peligro" onclick="eliminarProducto('${p.id}')">🗑️</button>
+                </td>
+            </tr>
+        `;
+    });
+}
 
     lista.forEach(p => {
         tbody.innerHTML += `
