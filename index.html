@@ -177,21 +177,25 @@
                             <input type="text" id="buscarProducto" placeholder="🔍 Buscar producto...">
                         </div>
                         <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Marca</th>
-                                        <th>Subtotal</th>
-                                        <th>Ganancia</th>
-                                        <th>P. Venta</th>
-                                        <th>Stock</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaProductos"></tbody>
-                            </table>
+                           <!-- CÓDIGO MODIFICADO (Copia y pega esto) -->
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Marca</th>
+            <th>Subtotal Unit.</th>
+            <th>Ganancia Unit.</th>
+            <th>Precio Unit.</th>
+            <th>Stock</th>
+            <th>Total Stock</th> <!-- <--- COLUMNA NUEVA -->
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tablaProductos">
+        <!-- Contenido dinámico -->
+    </tbody>
+</table>
                         </div>
                     </div>
                 </div>
