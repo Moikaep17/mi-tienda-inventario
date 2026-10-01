@@ -338,7 +338,21 @@ async function agregarAbonoExistente(ventaId) {
 
     await enviarAGoogleSheets({ action: 'actualizarAbonoVenta', venta });
 }
+// ==========================================
+// ELIMINAR VENTA (LOCAL Y GOOGLE SHEETS)
+// ==========================================
+async function eliminarVenta(id) {
+    if (confirm('¿Deseas eliminar esta venta? Esta acción la borrará permanentemente de Google Sheets.')) {
+        // 1. Eliminar localmente
+        ventas = ventas.filter(v => v.id !== id);
+        guardarEnLocalStorage();
+        actualizarTodo();
+        mostrarNotificacion('Venta eliminada correctamente');
 
+        // 2. Eliminar en Google Sheets
+        await enviarAGoogleSheets({ action: 'eliminarVenta', id: id });
+    }
+}
 // ==========================================
 // RENDERIZADO Y TABLAS
 // ==========================================
