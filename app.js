@@ -161,6 +161,24 @@ async function guardarProducto(e) {
     guardarEnLocalStorage();
     limpiarFormularioProducto();
     actualizarTodo();
+    // Dentro de la función guardarProducto en app.js:
+const totalStock = total * cantidad; // Calculamos el valor total en dinero del lote
+
+const productoData = {
+    id: idInput || '',
+    nombre,
+    marca,
+    detalle,
+    valor,
+    impuestos,
+    varios,
+    introduccion,
+    subtotal,
+    ganancia,
+    precio: total,
+    cantidad,
+    totalStock // <-- Agregamos este campo para enviarlo a Google Sheets
+};
 
     await enviarAGoogleSheets({ action: accion, producto: productoData });
 }
