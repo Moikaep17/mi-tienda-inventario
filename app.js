@@ -143,7 +143,7 @@ async function guardarProducto(e) {
     
     const { subtotal, total } = calcularTotalesProducto();
     const cantidad = parseInt(document.getElementById('cantidadProducto').value, 10) || 0;
-    const totalStock = total * cantidad; // Cálculo del valor del lote
+    const totalStock = total * cantidad;
 
     const productoData = {
         id: idInput || '',
