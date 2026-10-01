@@ -338,21 +338,21 @@ async function agregarAbonoExistente(ventaId) {
 
     await enviarAGoogleSheets({ action: 'actualizarAbonoVenta', venta });
 }
+
 // ==========================================
 // ELIMINAR VENTA (LOCAL Y GOOGLE SHEETS)
 // ==========================================
 async function eliminarVenta(id) {
     if (confirm('¿Deseas eliminar esta venta? Esta acción la borrará permanentemente de Google Sheets.')) {
-        // 1. Eliminar localmente
         ventas = ventas.filter(v => v.id !== id);
         guardarEnLocalStorage();
         actualizarTodo();
         mostrarNotificacion('Venta eliminada correctamente');
 
-        // 2. Eliminar en Google Sheets
         await enviarAGoogleSheets({ action: 'eliminarVenta', id: id });
     }
 }
+
 // ==========================================
 // RENDERIZADO Y TABLAS
 // ==========================================
@@ -366,44 +366,15 @@ function actualizarTodo() {
     actualizarTarjetasYReportes();
 }
 
-function renderTablaVentas() {
-    const tbody = document.getElementById('tablaVentas');
+function renderTablaInventario(lista) {
+    const tbody = document.getElementById('tablaProductos');
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    if (ventas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color: var(--text-muted);">No hay ventas registradas.</td></tr>`;
+    if (lista.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--text-muted);">No se encontraron productos.</td></tr>`;
         return;
     }
-
-    ventas.slice().reverse().forEach(v => {
-        let badgeClass = 'success';
-        if (v.estado === 'Pendiente') badgeClass = 'danger';
-        if (v.estado === 'Abono') badgeClass = 'warning';
-
-        let detalleAbonos = 'Sin abonos';
-        if (v.abonos && v.abonos.length > 0) {
-            detalleAbonos = v.abonos.map(a => `<small style="color:var(--text-muted);">${a.fecha}: L. ${a.monto.toFixed(2)}</small>`).join('<br>');
-        } else if (v.abonosTexto) {
-            detalleAbonos = `<small style="color:var(--text-muted);">${v.abonosTexto}</small>`;
-        }
-
-        tbody.innerHTML += `
-            <tr>
-                <td>${v.fecha}</td>
-                <td><strong>${v.productoNombre || v.producto}</strong> <span style="color:var(--text-muted);">(${v.cantidad})</span></td>
-                <td>${v.cliente}</td>
-                <td>Total: L. ${(v.total || 0).toFixed(2)}<br><small style="color:var(--success);">Abonado: L. ${(v.totalAbonado || 0).toFixed(2)}</small></td>
-                <td><span class="badge ${badgeClass}">${v.estado}</span><br><small style="color:var(--danger);">Pend: L. ${(v.saldoPendiente || 0).toFixed(2)}</small></td>
-                <td>${detalleAbonos}</td>
-                <td style="display: flex; gap: 5px; align-items: center;">
-                    ${(v.saldoPendiente || 0) > 0 ? `<button class="boton-sm primario" onclick="agregarAbonoExistente('${v.id}')">+ Abono</button>` : '✅ Pagado'}
-                    <button class="boton-sm peligro" onclick="eliminarVenta('${v.id}')" title="Eliminar Venta">🗑️</button>
-                </td>
-            </tr>
-        `;
-    });
-}
 
     lista.forEach(p => {
         tbody.innerHTML += `
@@ -414,7 +385,7 @@ function renderTablaVentas() {
                 <td>L. ${(p.subtotal || 0).toFixed(2)}</td>
                 <td>L. ${(p.ganancia || 0).toFixed(2)}</td>
                 <td><strong>L. ${(p.precio || 0).toFixed(2)}</strong></td>
-                <td>${p.cantidad || p.stock || 0}</td>
+                <td>${p.cantidad !== undefined ? p.cantidad : p.stock || 0}</td>
                 <td>
                     <button class="boton-sm primario" onclick="editarProducto('${p.id}')">✏️</button>
                     <button class="boton-sm peligro" onclick="eliminarProducto('${p.id}')">🗑️</button>
@@ -454,8 +425,9 @@ function renderTablaVentas() {
                 <td>Total: L. ${(v.total || 0).toFixed(2)}<br><small style="color:var(--success);">Abonado: L. ${(v.totalAbonado || 0).toFixed(2)}</small></td>
                 <td><span class="badge ${badgeClass}">${v.estado}</span><br><small style="color:var(--danger);">Pend: L. ${(v.saldoPendiente || 0).toFixed(2)}</small></td>
                 <td>${detalleAbonos}</td>
-                <td>
+                <td style="display: flex; gap: 5px; align-items: center;">
                     ${(v.saldoPendiente || 0) > 0 ? `<button class="boton-sm primario" onclick="agregarAbonoExistente('${v.id}')">+ Abono</button>` : '✅ Pagado'}
+                    <button class="boton-sm peligro" onclick="eliminarVenta('${v.id}')" title="Eliminar Venta">🗑️</button>
                 </td>
             </tr>
         `;
